@@ -21,7 +21,7 @@ from abc import ABC
 from abc import abstractmethod
 
 from tokenizers import Tokenizer
-from transformers import GPT2Tokenizer, GPT2TokenizerFast
+from transformers import GPT2Tokenizer, GPT2TokenizerFast, AutoTokenizer
 import numpy as np
 import sentencepiece as spm
 from typing import List, Union
@@ -54,6 +54,12 @@ def build_tokenizer(args):
     elif args.tokenizer_type.lower() == "TiktokenTokenizer".lower():
         assert args.vocab_file is not None
         tokenizer = TiktokenTokenizer(args.vocab_file)
+    elif args.tokenizer_type.lower() == "HFLlamaTokenizer".lower():
+        if args.vocab_file is None:
+            print(
+                "WARNING: No vocab file found, loading Huggingface's pretrained LlamaTokenizer"
+            )
+        tokenizer = HFLlamaTokenizer(args.vocab_file)
     else:
         raise NotImplementedError(
             "{} tokenizer is not " "implemented.".format(args.tokenizer_type)
@@ -271,6 +277,49 @@ class HFGPT2Tokenizer(AbstractTokenizer):
         else:
             self.tokenizer = GPT2Tokenizer.from_pretrained(vocab_file)
 
+        self.tokenizer.add_special_tokens({"pad_token": "<|padding|>"})
+        self.eod_id = self.tokenizer.eos_token_id
+        self.pad_id = self.tokenizer.pad_token_id
+
+    @property
+    def vocab_size(self):
+        return len(self.tokenizer)
+
+    @property
+    def vocab(self):
+        return self.tokenizer.get_vocab()
+
+    @property
+    def inv_vocab(self):
+        return self.tokenizer._tokenizer.decoder
+
+    def tokenize(self, text: str):
+        return self.tokenizer.encode(text)
+
+    def tokenize_batch(self, text_batch: Union[List[str], str]):
+        if isinstance(text_batch, str):
+            text_batch = [text_batch]
+        return [self.tokenize(t) for t in text_batch]
+
+    def detokenize(self, token_ids):
+        return self.tokenizer.decode(token_ids)
+
+    @property
+    def eod(self):
+        return self.eod_id
+
+
+class HFLlamaTokenizer(AbstractTokenizer):
+    """Designed to Integrate the pretrained Llama Tokenizers from HF"""
+
+    def __init__(self, vocab_file=None):
+        name = "HFLlamaTokenizer"
+        super().__init__(name)
+
+        if vocab_file is None:
+            vocab_file = "meta-llama/Llama-2-7b-hf"
+
+        self.tokenizer = AutoTokenizer.from_pretrained(vocab_file)
         self.tokenizer.add_special_tokens({"pad_token": "<|padding|>"})
         self.eod_id = self.tokenizer.eos_token_id
         self.pad_id = self.tokenizer.pad_token_id
