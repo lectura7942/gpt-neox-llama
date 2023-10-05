@@ -95,6 +95,7 @@ def get_args():
             "CharLevelTokenizer",
             "TiktokenTokenizer",
             "SPMTokenizer",
+            "HFLlamaTokenizer"
         ],
         help="What type of tokenizer to use.",
     )
