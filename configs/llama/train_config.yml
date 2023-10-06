@@ -1,6 +1,6 @@
 {
   # finetuning option
-  "finetune": true,
+  "finetune": false,
 
   # init methods
   "init_method": "small_init",
@@ -8,7 +8,7 @@
 
   # optimizer settings
   "optimizer": {
-    "type": "Adam",
+    "type": "CPU_Adam", # bec. cpu offload
     "params": {
      "lr": 0.0002,
      "betas": [0.9, 0.95],
@@ -20,17 +20,36 @@
 
   # for all zero_optimization options, see https://www.deepspeed.ai/docs/config-json/#zero-optimizations-for-fp16-training
    "zero_optimization": {
-   "stage": 1,
-   "allgather_partitions": True,
-   "allgather_bucket_size": 500000000,
-   "overlap_comm": True,
-   "reduce_scatter": True,
-   "reduce_bucket_size": 500000000,
-   "contiguous_gradients": True,
+   "stage": 3,
+   "offload_optimizer": {
+         "device": "cpu",
+         "pin_memory": true
+     },
+    "offload_param":{
+      "device": "cpu",
+      "pin_memory": true,
+    },
+    "overlap_comm": true,
+    # "contiguous_gradients": true,
+    "sub_group_size": 1000000000,
+    # "reduce_bucket_size": "auto",
+    # "stage3_prefetch_bucket_size": "auto",
+    # "stage3_param_persistence_threshold": "auto",
+    # "stage3_max_live_parameters": 1000000000,
+    # "stage3_max_reuse_distance": 1000000000,
+    "stage3_gather_16bit_weights_on_model_save": true,
+  #  "allgather_partitions": True,
+  #  "allgather_bucket_size": 500000000,
+  #  "overlap_comm": True,
+  #  "reduce_scatter": True,
+  #  "reduce_bucket_size": 500000000,
+  #  "contiguous_gradients": True,
+   "load_from_fp32_weights": false, # default True. False - fp16 사용 w/ precision loss
   },
 
   # batch / data settings
-  "train_micro_batch_size_per_gpu": 4,
+  "train_micro_batch_size_per_gpu": 1,
+  "gradient_accumulation_steps": 1,
   "data_impl": "mmap",
 
   # activation checkpointing
@@ -49,10 +68,11 @@
   "fp16": {
     "fp16": true,
     "enabled": true,
-    "loss_scale": 0,
+    "loss_scale": 0, # 0 - dynamic loss scaling, else - static fixed loss scaling
     "loss_scale_window": 1000,
     "hysteresis": 2,
-    "min_loss_scale": 1
+    "min_loss_scale": 1,
+    "auto_cast": true, # 입력을 자동으로 fp16화
   },
 
   # misc. training settings
