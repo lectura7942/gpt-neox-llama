@@ -133,7 +133,9 @@ class Embedding(torch.nn.Module):
 
     def forward(self, input_ids, position_ids, tokentype_ids=None):
         # Embeddings.
-        input_ids = torch.tensor(input_ids).long()  # check
+        
+        input_ids = input_ids.long()
+            
         words_embeddings = self.word_embeddings(input_ids)
         if self.use_pos_emb and self.embedding_type in ["learned", "sinusoidal"]:
             if self.opt_pos_emb_offset:
