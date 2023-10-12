@@ -1,0 +1,21 @@
+{
+  # for all zero_optimization options, see https://www.deepspeed.ai/docs/config-json/#zero-optimizations-for-fp16-training
+
+  "zero_optimization": {
+      "stage": 1,
+      "reduce_bucket_size": 500000000,
+      "offload_optimizer": { # 없으면 OOM
+        "device": "cpu"
+      },
+  },
+  
+  "optimizer": {
+    # "type": "adam", # no cpu offload
+    "type": "cpu_adam", # cpu offload
+    "params": {
+      "lr": 0.0002,
+      "betas": [0.9, 0.95],
+      "eps":  1.0e-8,
+    }
+  },
+}

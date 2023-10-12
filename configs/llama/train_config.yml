@@ -5,51 +5,16 @@
   # init methods
   "init_method": "small_init",
   "output_layer_init_method": "wang_init",
+  "init_method_std": 0.01,
 
   # optimizer settings
-  "optimizer": {
-    "type": "CPU_Adam", # bec. cpu offload
-    "params": {
-     "lr": 0.0002,
-     "betas": [0.9, 0.95],
-     "eps":  1.0e-8,
-    }
-  },
+  # "optimizer": {} in zero config
   "min_lr": 0.00002,
   "override_lr_scheduler": true,
 
-  # for all zero_optimization options, see https://www.deepspeed.ai/docs/config-json/#zero-optimizations-for-fp16-training
-   "zero_optimization": {
-   "stage": 3,
-   "offload_optimizer": {
-         "device": "cpu",
-         "pin_memory": true
-     },
-    "offload_param":{
-      "device": "cpu",
-      "pin_memory": true,
-    },
-    "overlap_comm": true,
-    # "contiguous_gradients": true,
-    "sub_group_size": 1000000000,
-    # "reduce_bucket_size": "auto",
-    # "stage3_prefetch_bucket_size": "auto",
-    # "stage3_param_persistence_threshold": "auto",
-    # "stage3_max_live_parameters": 1000000000,
-    # "stage3_max_reuse_distance": 1000000000,
-    "stage3_gather_16bit_weights_on_model_save": true,
-  #  "allgather_partitions": True,
-  #  "allgather_bucket_size": 500000000,
-  #  "overlap_comm": True,
-  #  "reduce_scatter": True,
-  #  "reduce_bucket_size": 500000000,
-  #  "contiguous_gradients": True,
-   "load_from_fp32_weights": false, # default True. False - fp16 사용 w/ precision loss
-  },
-
   # batch / data settings
-  "train_micro_batch_size_per_gpu": 1,
-  "gradient_accumulation_steps": 1,
+  "train_micro_batch_size_per_gpu": 4,
+  "gradient_accumulation_steps": 4,
   "data_impl": "mmap",
 
   # activation checkpointing
@@ -76,18 +41,18 @@
   },
 
   # misc. training settings
-  "train_iters": 1,
-  "lr_decay_iters": 320000,
+  "train_iters": 1000,
+  "lr_decay_iters": 1000, # should be same as train_iters
   "distributed_backend": "nccl",
   "lr_decay_style": "cosine",
   "warmup": 0.01,
-  "checkpoint_factor": 10000,
-  "eval_interval": 1000,
+  "checkpoint_factor": 100,
+  "eval_interval": 500,
   "eval_iters": 10,
 
   # logging
-  "log_interval": 100,
+  "log_interval": 10,
   "steps_per_print": 10,
-  "keep_last_n_checkpoints": 4,
+  "keep_last_n_checkpoints": 1,
   "wall_clock_breakdown": true,
 }
