@@ -212,7 +212,7 @@ def save_ds_checkpoint(iteration, model, neox_args):
         configs_directory = os.path.join(neox_args.save, tag, "configs")
         os.makedirs(configs_directory, exist_ok=True)
         for config_filename, config_data in neox_args.config_files.items():
-            with open(os.path.join(configs_directory, config_filename), "w") as f:
+            with open(os.path.join(configs_directory, config_filename), "w", encoding="utf-8") as f:
                 if isinstance(config_data, str):
                     f.write(config_data)
                 else:
