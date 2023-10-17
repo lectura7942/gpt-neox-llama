@@ -686,7 +686,8 @@ def setup_model_and_optimizer(neox_args, use_cache=False, iteration=None):
         neox_args.iteration = 0
 
     # need this for correct lr scheduling resume from ckpt
-    lr_scheduler.optimizer = model.optimizer
+    if not neox_args.no_load_optim:
+        lr_scheduler.optimizer = model.optimizer
 
     return model, optimizer, lr_scheduler
 
