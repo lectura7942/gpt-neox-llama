@@ -323,6 +323,7 @@ class HFLlamaTokenizer(AbstractTokenizer):
         self.tokenizer.add_special_tokens({"pad_token": "<|padding|>"})
         self.eod_id = self.tokenizer.eos_token_id
         self.pad_id = self.tokenizer.pad_token_id
+        self.bos_id = self.tokenizer.bos_token_id
 
     @property
     def vocab_size(self):
