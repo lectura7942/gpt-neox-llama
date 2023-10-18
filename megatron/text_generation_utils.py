@@ -445,6 +445,9 @@ def generate_samples_from_prompt(
     # generate completions
     generated_texts = []
     while True:
+        # check
+        model.module.clear_cache()  # clear kv cache between batches
+
 
         start_time = time.time()
         # Tokenize text, and check whether we should terminate process
@@ -456,7 +459,7 @@ def generate_samples_from_prompt(
             input_pos += 1
 
             if raw_text == "":
-                context_tokens = [eos_token_id]
+                context_tokens = [eos_token_id] # TODO Llama는 bos_token 사용해야 함
             else:
                 context_tokens = neox_args.tokenizer.tokenize(raw_text)
             context_length = len(context_tokens)
