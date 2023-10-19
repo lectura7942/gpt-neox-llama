@@ -1,4 +1,6 @@
 {
+  "tokenizer_type": "HFLlamaTokenizer",
+
   "pipe_parallel_size": 0, # if using zero2+ set to 0 else 1+
   "model_parallel_size": 4,
   "make_vocab_size_divisible_by": 1,
@@ -7,8 +9,8 @@
   "num_layers": 32,
   "hidden_size": 4096,
   "num_attention_heads": 32,
-  "seq_length": 2048,
-  "max_position_embeddings": 2048,
+  "seq_length": 4096,
+  "max_position_embeddings": 4096,
   "pos_emb": "rotary",
   "rotary_pct": 1,
   "no_weight_tying": true,

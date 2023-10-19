@@ -1,0 +1,1 @@
+python ./deepy.py generate.py -d configs llama/llama_7b_inference_config.yml text_generation.yml

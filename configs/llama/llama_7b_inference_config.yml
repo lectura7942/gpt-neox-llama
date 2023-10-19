@@ -1,0 +1,113 @@
+{
+  ### Local setting ###
+  "data_path": "data/2gb_text_document",
+  "save": "checkpoints",
+  "load": "checkpoints",
+  "checkpoint_validation_with_forward_pass": False,
+
+  "log_dir": "logs",
+  "use_wandb": False,
+  "wandb_host": "https://api.wandb.ai",
+  "wandb_project": "GiLlama",
+
+  ### Llama 7B model ###
+  "tokenizer_type": "HFLlamaTokenizer",
+
+  "pipe_parallel_size": 0, # if using zero2+ set to 0 else 1+
+  "model_parallel_size": 4,
+  "make_vocab_size_divisible_by": 1,
+
+  # model settings
+  "num_layers": 32,
+  "hidden_size": 4096,
+  "num_attention_heads": 32,
+  "seq_length": 4096,
+  "max_position_embeddings": 4096,
+  "pos_emb": "rotary",
+  "rotary_pct": 1,
+  "no_weight_tying": true,
+  "gpt_j_residual": false,
+  "output_layer_parallelism": "column",
+  "norm": "rmsnorm",
+  "rms_norm_epsilon": 1.0e-6,
+
+  "scaled_upper_triang_masked_softmax_fusion": true,
+  "bias_gelu_fusion": false,
+  "use_bias_in_norms": false,
+  "use_bias_in_attn_linear": false,
+  "mlp_type": "llama",
+  "activation": "silu",
+
+  ### training configs ###
+
+  # finetuning option
+  "finetune": false,
+
+  # init methods
+  "init_method": "small_init",
+  "output_layer_init_method": "wang_init",
+  "init_method_std": 0.01,
+
+  # optimizer settings
+  # "optimizer": {} in zero config
+  "min_lr": 0.00002,
+  "override_lr_scheduler": true,
+
+  # batch / data settings
+  "train_micro_batch_size_per_gpu": 4,
+  "gradient_accumulation_steps": 4,
+  "data_impl": "mmap",
+
+  # activation checkpointing
+  "checkpoint_activations": true,
+  "checkpoint_num_layers": 1,
+  "partition_activations": true,
+  "synchronize_each_layer": true,
+
+  # regularization
+  "gradient_clipping": 1.0,
+  "weight_decay": 0.1,
+  "hidden_dropout": 0,
+  "attention_dropout": 0,
+
+  # precision settings
+  "fp16": {
+    "fp16": true,
+    "enabled": true,
+    "loss_scale": 0, # 0 - dynamic loss scaling, else - static fixed loss scaling
+    "loss_scale_window": 1000,
+    "hysteresis": 2,
+    "min_loss_scale": 1,
+    "auto_cast": true, # 입력을 자동으로 fp16화
+  },
+
+  # misc. training settings
+  "train_iters": 1000,
+  "lr_decay_iters": 1000, # should be same as train_iters
+  "distributed_backend": "nccl",
+  "lr_decay_style": "cosine",
+  "warmup": 0.01,
+  "checkpoint_factor": 100,
+  "eval_interval": 500,
+  "eval_iters": 10,
+
+  # logging
+  "log_interval": 10,
+  "steps_per_print": 10,
+  "keep_last_n_checkpoints": 1,
+  "wall_clock_breakdown": true,
+
+  ### zero setting ###
+  "zero_optimization": {
+    "stage": 0,
+  },
+  
+  "optimizer": {
+    "type": "adam", # no cpu offload
+    "params": {
+      "lr": 0.0002,
+      "betas": [0.9, 0.95],
+      "eps":  1.0e-8,
+    }
+  },
+}

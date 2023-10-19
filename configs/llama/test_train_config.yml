@@ -1,11 +1,18 @@
 {
+  # local_setup
+  "data_path": "data/2gb_text_document",
+  # "tokenizer_type": "HFLlamaTokenizer", # in 7B configs
+  "log_dir": "logs",
+  "use_wandb": False,
+  # "save": "checkpoints", # if not defined, no checkpoint
+
   # finetuning option
   "finetune": false,
 
   # init methods
   "init_method": "small_init",
   "output_layer_init_method": "wang_init",
-  "init_method_std": 0.01, # 기본값 0.02는 overflow 발생
+  "init_method_std": 0.01,
 
   # optimizer settings
   # "optimizer": {} in zero config
@@ -18,7 +25,7 @@
   "data_impl": "mmap",
 
   # activation checkpointing
-  "checkpoint_activations": true,
+  "checkpoint_activations": true, # saves memory at cost of speed
   "checkpoint_num_layers": 1,
   "partition_activations": true,
   "synchronize_each_layer": true,
@@ -41,17 +48,17 @@
   },
 
   # misc. training settings
-  "train_iters": 1000,
-  "lr_decay_iters": 1000, # should be same as train_iters
+  "train_iters": 2,
+  "lr_decay_iters": 2, # should be same as train_iters
   "distributed_backend": "nccl",
   "lr_decay_style": "cosine",
   "warmup": 0.01,
-  "checkpoint_factor": 30,
+  "checkpoint_factor": 100,
   "eval_interval": 500,
   "eval_iters": 10,
 
   # logging
-  "log_interval": 10,
+  "log_interval": 2,
   "steps_per_print": 10,
   "keep_last_n_checkpoints": 1,
   "wall_clock_breakdown": true,

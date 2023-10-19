@@ -1,0 +1,1 @@
+python ./deepy.py ./train.py -d configs llama/7B.yml llama/test_train_config.yml llama/zero2_config.yml
