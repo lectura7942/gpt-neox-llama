@@ -628,9 +628,9 @@ def generate_samples_input_from_file(
     )
 
     if is_mp_rank_0():
-        with open(output_file, "w") as f_out:
+        with open(output_file, "w", encoding="utf-8") as f_out:
             for item in generated_texts:
-                f_out.write(json.dumps(item) + "\n")
+                f_out.write(json.dumps(item, ensure_ascii=False) + "\n")
     print_rank_0("generate_samples_input_from_file() done")
     return generated_texts
 
