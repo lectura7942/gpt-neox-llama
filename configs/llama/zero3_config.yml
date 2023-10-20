@@ -11,6 +11,10 @@
       "offload_optimizer": { # 없으면 OOM
         "device": "cpu"
       },
+      "stage3_max_live_parameters": 1000000000,
+      "stage3_max_reuse_distance": 1000000000,
+      "stage3_prefetch_bucket_size": 500000000,
+      "stage3_param_persistence_threshold": 1000000,
   },
 
   "optimizer": {

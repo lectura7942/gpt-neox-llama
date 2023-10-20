@@ -2,17 +2,16 @@
 {
   "zero_optimization": {
       "stage": 2,
-      "reduce_bucket_size": 50000000,
       "contiguous_gradients": true,
       "overlap_comm": true,
       "reduce_scatter": true,
       "reduce_bucket_size": 500000000,
-      "allgather_bucket_size": 500000000,
+      "allgather_bucket_size": 1000000000,
       "offload_optimizer": { # 없으면 OOM
         "device": "cpu",
-        "pin_memory": True, # boost throughput at the cost of extra memory overhead
+        "pin_memory": False, # boost throughput at the cost of extra memory overhead
       },
-      "round_robin_gradients": False, # True면 뭐가 좋아지나? stage1&2 optimization
+      "round_robin_gradients": True, # True면 뭐가 좋아지나? stage1&2 optimization
   },
 
   "optimizer": {

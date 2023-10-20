@@ -8,15 +8,15 @@
   # Params for all
   "maximum_tokens": 102,
   "prompt_end": "\n",
-  "temperature": 1.0,
-  "top_p": 0.0,
-  "top_k": 0,
+  "temperature": 0.6,
+  "top_p": 0.92,
+  "top_k": 50,
   "recompute": false,
 
   # `unconditional`: samples
-  "num_samples": 2,
+  "num_samples": 5,
 
   # input/output file
   "sample_input_file": "data/inference/sample_input.txt",
-  "sample_output_file": "data/inference/sample_output.txt",
+  "sample_output_file": "data/inference/300_output.txt",
 }
